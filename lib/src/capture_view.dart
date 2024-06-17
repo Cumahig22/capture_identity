@@ -63,7 +63,7 @@ class _CaptureViewState extends State<CaptureView> {
         if (!mounted) {
           return;
         }
-        controller.setFlashMode(FlashMode.off);
+        // controller.setFlashMode(FlashMode.off);
         setState(() {});
       });
     });
