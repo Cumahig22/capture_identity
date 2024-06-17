@@ -51,11 +51,9 @@ class _CaptureViewState extends State<CaptureView> {
     initializeCameras().then((value) {
 // Initialize the camera controller with a default camera description.
       if (cameras.isEmpty) {
-        controller.setFlashMode(FlashMode.off);
         controller = CameraController(
             getDefaultCameraDescription(), ResolutionPreset.ultraHigh);
       } else {
-        controller.setFlashMode(FlashMode.off);
         controller =
             CameraController(cameras.first, ResolutionPreset.ultraHigh);
       }
