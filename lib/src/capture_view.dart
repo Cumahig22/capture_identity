@@ -60,10 +60,10 @@ class _CaptureViewState extends State<CaptureView> {
 
       // Initialize the camera controller and update the UI after initialization.
       controller.initialize().then((_) {
-        controller.setFlashMode(FlashMode.off);
         if (!mounted) {
           return;
         }
+        controller.setFlashMode(FlashMode.off);
         setState(() {});
       });
     });
