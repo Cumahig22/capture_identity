@@ -70,6 +70,43 @@ class _CaptureViewState extends State<CaptureView> {
     });
   }
 
+  Future<void> toggleCamera() async {
+    // Assuming 'cameras' is a list of available cameras obtained from availableCameras()
+    if (cameras.isEmpty) return; // If no cameras are available, do nothing
+
+    // Find the index of the current camera
+    CameraDescription newCamera;
+    if (controller.description.lensDirection == CameraLensDirection.front) {
+      // If the current camera is front, switch to the first back camera
+      newCamera = cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.back,
+        orElse: () => cameras
+            .first, // Fallback to the first camera if no back camera is found
+      );
+    } else {
+      // If the current camera is back, switch to the first front camera
+      newCamera = cameras.firstWhere(
+        (camera) => camera.lensDirection == CameraLensDirection.front,
+        orElse: () => cameras
+            .first, // Fallback to the first camera if no front camera is found
+      );
+    }
+
+    // Dispose of the current controller
+    await controller.dispose();
+
+    // Create a new controller with the new camera
+    controller = CameraController(newCamera, ResolutionPreset.ultraHigh);
+
+    // Initialize the new controller and update the UI after initialization
+    controller.initialize().then((_) {
+      if (!mounted) return;
+
+      setState(() {});
+      controller.setFlashMode(FlashMode.off); // Set flash mode if needed
+    });
+  }
+
   Future<void> initializeCameras() async {
     // await Permission.camera.request();
     cameras = await availableCameras();
@@ -185,6 +222,29 @@ class _CaptureViewState extends State<CaptureView> {
                   Icons.camera,
                 ),
                 iconSize: 72,
+              ),
+            ),
+          ),
+
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.black12,
+                shape: BoxShape.circle,
+              ),
+              margin: const EdgeInsets.all(25),
+              child: IconButton(
+                enableFeedback: true,
+                color: Colors.white,
+                onPressed: () async {
+                  toggleCamera();
+                },
+                icon: const Icon(
+                  Icons.change_circle_outlined,
+                ),
+                // iconSize: 72,
+                iconSize: 62,
               ),
             ),
           ),
